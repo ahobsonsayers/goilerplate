@@ -25,5 +25,5 @@ To merge the latest `goilerplate` changes into a downstream, run the following i
 ```bash
 git remote add -f upstream https://github.com/ahobsonsayers/goilerplate
 git fetch upstream
-git merge --no-commit -X ours --allow-unrelated-histories upstream/main
+git merge --squash -X ours --allow-unrelated-histories upstream/main
 ```
