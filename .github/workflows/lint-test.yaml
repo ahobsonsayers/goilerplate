@@ -1,4 +1,4 @@
-name: Go Lint and Test
+name: Lint and Test
 
 on:
   # Manual Invocation
