@@ -6,14 +6,14 @@ Linting configuration can also be [found in the gist here](https://gist.github.c
 
 ## Setup
 
-Once you have cloned goilerplate, replace all reference to goilerplate with you project name
+Once you have cloned `goilerplate`, replace all references to `goilerplate` with you project name
 
 ```bash
 read -p "Enter project name: " PROJECT_NAME
-rm -rf .git
-git init
-find . -type f -exec sed -i 's|goileerplate|$PROJECT_NAME|g' {} \;
+find . -type f -exec sed -i "" "s|goilerplate|$PROJECT_NAME|g" {} \;
 ```
+
+Remember to also delete your `.git` folder.
 
 ## Merging latest goilerplate changes
 
