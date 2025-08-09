@@ -18,6 +18,18 @@ tasks:
     cmds:
       - go build -v -o ./bin/ .
 
+  build:docker:
+    cmds:
+      - docker build . -t arranhs/goilerplate
+
   run:
     cmds:
       - go run .
+
+  run:docker:
+    deps: [build:docker]
+    cmds:
+      - |
+        docker run --rm \
+          --name goilerplate \
+          -t arranhs/goilerplate
