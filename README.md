@@ -6,11 +6,14 @@ Linting configuration can also be [found in the gist here](https://gist.github.c
 
 ## Setup
 
-Once you have cloned `goilerplate`, replace all references to `goilerplate` with you project name
+Once you have cloned `goilerplate`, replace all references to `goilerplate` with you project name:
+
+> [!NOTE]
+> You will need [fd](https://github.com/sharkdp/fd) and [sd](https://github.com/chmln/sd) installed
 
 ```bash
 read -p "Enter project name: " PROJECT_NAME
-find . -type f -exec sed -i "" "s|goilerplate|$PROJECT_NAME|g" {} \;
+fd -t f -x sd "goilerplate" "$PROJECT_NAME"
 ```
 
 Remember to also delete your `.git` folder.
@@ -20,10 +23,6 @@ Remember to also delete your `.git` folder.
 To merge the latest goilerplate changes, run:
 
 ```bash
-git remote add -f upstream https://github.com/ahobsonsayers/goilerplate
 git fetch upstream
-git merge --no-commit --no-ff upstream/main
-git reset README.md
+git merge -X ours --no-ff upstream/main
 ```
-
-This will not touch your README
