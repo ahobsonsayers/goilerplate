@@ -15,4 +15,4 @@ git merge --no-commit --no-ff upstream/main
 git reset README.md
 ```
 
-This will not touch your readme
+This will not touch your README
