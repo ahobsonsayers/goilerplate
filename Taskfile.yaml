@@ -10,6 +10,10 @@ tasks:
     cmds:
       - go tool golangci-lint run .
 
+  test:
+    cmds:
+      - go test ./...
+
   build:
     cmds:
       - go build -v -o ./bin/ .
