@@ -1,4 +1,4 @@
-module github.com/ahobsonsayers/gorker
+module github.com/ahobsonsayers/goilerplate
 
 go 1.24
 

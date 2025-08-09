@@ -4,7 +4,18 @@ This repo contains the boilerplate for when I am starting a new go project, incl
 
 Linting configuration can also be [found in the gist here](https://gist.github.com/ahobsonsayers/5a6baccee157e5d5c1ac4c1ccd163348)
 
-# Merging latest goilerplate changes
+## Setup
+
+Once you have cloned goilerplate, replace all reference to goilerplate with you project name
+
+```bash
+read -p "Enter project name: " PROJECT_NAME
+rm -rf .git
+git init
+find . -type f -exec sed -i 's|goileerplate|$PROJECT_NAME|g' {} \;
+```
+
+## Merging latest goilerplate changes
 
 To merge the latest goilerplate changes, run:
 
