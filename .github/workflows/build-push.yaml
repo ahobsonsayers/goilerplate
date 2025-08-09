@@ -52,7 +52,7 @@ jobs:
       - name: Login to docker hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: arranhs
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get image tags
@@ -67,7 +67,7 @@ jobs:
 
           {
             echo "tags<<EOF"
-            echo "$FULL_TAGS"
+            echo -e "$FULL_TAGS"
             echo "EOF"
           } >>"$GITHUB_OUTPUT"
 
