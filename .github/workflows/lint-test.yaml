@@ -20,10 +20,10 @@ jobs:
         shell: bash
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Run Lint
+      - name: Run lint
         uses: golangci/golangci-lint-action@v8
 
   test:
@@ -35,7 +35,7 @@ jobs:
         shell: bash
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Setup go
