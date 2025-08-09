@@ -23,6 +23,7 @@ Remember to also delete your `.git` folder.
 To merge the latest goilerplate changes, run:
 
 ```bash
+git remote add -f upstream https://github.com/ahobsonsayers/goilerplate
 git fetch upstream
 git merge -X ours --no-ff upstream/main
 ```
