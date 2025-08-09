@@ -4,7 +4,7 @@ This repo contains the boilerplate for when I am starting a new go project, incl
 
 Linting configuration can also be [found in the gist here](https://gist.github.com/ahobsonsayers/5a6baccee157e5d5c1ac4c1ccd163348)
 
-## Setup
+## First Steps
 
 Once you have cloned `goilerplate`, replace all references to `goilerplate` with you project name:
 
@@ -13,17 +13,17 @@ Once you have cloned `goilerplate`, replace all references to `goilerplate` with
 
 ```bash
 read -p "Enter project name: " PROJECT_NAME
-fd -t f -x sd "goilerplate" "$PROJECT_NAME"
+fd -t f --hidden -E .git -x sd "goilerplate" "$PROJECT_NAME"
 ```
 
 Remember to also delete your `.git` folder.
 
-## Merging latest goilerplate changes
+## Merge latest goilerplate changes
 
-To merge the latest goilerplate changes, run:
+To merge the latest `goilerplate` changes into a downstream, run the following in the downstream repository:
 
 ```bash
 git remote add -f upstream https://github.com/ahobsonsayers/goilerplate
 git fetch upstream
-git merge -X ours --no-ff upstream/main
+git merge --no-commit -X ours --allow-unrelated-histories upstream/main
 ```
