@@ -25,6 +25,9 @@ on:
         type: string
         required: true
 
+env:
+  IMAGE_REPOSITORY: arranhs/goilerplate
+
 jobs:
   build-push:
     name: Build and Push
@@ -60,7 +63,7 @@ jobs:
 
           full_tags=()
           for tag in "${tags[@]}"; do
-            full_tags+=("arranhs/twitchets:$tag")
+            full_tags+=("$IMAGE_REPOSITORY:$tag")
           done
 
           echo "tags=${full_tags[*]}" >>"$GITHUB_OUTPUT"
