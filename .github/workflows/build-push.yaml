@@ -52,7 +52,7 @@ jobs:
       - name: Login to docker hub
         uses: docker/login-action@v3
         with:
-          username: arranhs
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get image tags
