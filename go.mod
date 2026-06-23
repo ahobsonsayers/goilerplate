@@ -7,7 +7,10 @@ tool (
 	mvdan.cc/gofumpt
 )
 
-require github.com/stretchr/testify v1.10.0 // indirect
+require (
+	github.com/stretchr/testify v1.11.1
+	github.com/urfave/cli/v3 v3.10.0
+)
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.3.0 // indirect

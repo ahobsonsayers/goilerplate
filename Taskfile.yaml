@@ -27,7 +27,7 @@ tasks:
 
   build:
     cmds:
-      - go build -v -o ./bin/ .
+      - go build -v -o ./bin/goilerplate ./cmd/goilerplate
 
   build:docker:
     cmds:
@@ -35,7 +35,7 @@ tasks:
 
   run:
     cmds:
-      - go run .
+      - go run ./cmd/goilerplate {{.CLI_ARGS}}
 
   run:docker:
     deps: [build:docker]
