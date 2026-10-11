@@ -41,10 +41,9 @@ var rootCmd = &cli.Command{
 			Usage: "count to n",
 			Flags: []cli.Flag{
 				&cli.IntFlag{
-					Name:    "n",
-					Value:   3,
-					Usage:   "number to count to",
-					Aliases: []string{"n"},
+					Name:  "n",
+					Value: 3,
+					Usage: "number to count to",
 				},
 			},
 			Action: count,
