@@ -4,6 +4,23 @@ This repo contains the boilerplate for when I am starting a new go project, incl
 
 Linting configuration can also be [found in the gist here](https://gist.github.com/ahobsonsayers/5a6baccee157e5d5c1ac4c1ccd163348)
 
+## Commands
+
+- `greet` - a simple example cli command you can replace
+- `worker` - example worker (see [Example worker](#example-worker)) - delete if your project does not need a worker
+
+## Example worker
+
+The `worker` package ([worker/worker.go](worker/worker.go)) contains an example of a worker that runs in a goroutine, with proper synchronisation. Run it with:
+
+```bash
+go run ./cmd/goilerplate worker --period 200ms
+```
+
+Replace `(*Worker).Run` in `worker/worker.go` with the work your project needs.
+
+If your project does not need a worker, delete `worker/` and the `worker` command in [cmd/goilerplate/main.go](cmd/goilerplate/main.go).
+
 ## First Steps
 
 Once you have cloned `goilerplate`, replace all references to `goilerplate` with you project name:

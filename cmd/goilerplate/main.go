@@ -2,11 +2,17 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/urfave/cli/v3"
+
+	"github.com/ahobsonsayers/goilerplate/worker"
 )
 
 var rootCmd = &cli.Command{
@@ -37,16 +43,16 @@ var rootCmd = &cli.Command{
 			Action: greet,
 		},
 		{
-			Name:  "count",
-			Usage: "count to n",
+			Name:  "worker",
+			Usage: "run the example worker until interrupted",
 			Flags: []cli.Flag{
-				&cli.IntFlag{
-					Name:  "n",
-					Value: 3,
-					Usage: "number to count to",
+				&cli.DurationFlag{
+					Name:  "period",
+					Value: time.Second,
+					Usage: "polling period for the worker",
 				},
 			},
-			Action: count,
+			Action: runWorker,
 		},
 	},
 	Action: run,
@@ -77,12 +83,57 @@ func greet(_ context.Context, cmd *cli.Command) error {
 	return nil
 }
 
-func count(_ context.Context, cmd *cli.Command) error {
-	n := cmd.Int("n")
-	for i := 1; i <= n; i++ {
-		fmt.Println(i)
+func runWorker(ctx context.Context, cmd *cli.Command) error {
+	config := worker.Config{
+		PollingPeriod: cmd.Duration("period"),
 	}
-	return nil
+
+	w, err := worker.NewWorker(config)
+	if err != nil {
+		return err
+	}
+
+	// Register signal to stop worker
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, os.Interrupt, syscall.SIGTERM)
+	defer signal.Stop(signalChan)
+	go func() {
+		<-signalChan
+		w.Stop()
+	}()
+
+	// Create cancellable context
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	// Print worker result and error channels
+	go func() {
+		for result := range w.Results() {
+			fmt.Printf("Current Time: %v\n", result)
+		}
+	}()
+	go func() {
+		for err := range w.Errors() {
+			log.Printf("Worker error: %v", err)
+		}
+	}()
+
+	// Run worker (in a goroutine)
+	workerErrChan := make(chan error, 1)
+	go func() {
+		workerErrChan <- w.Start(ctx)
+	}()
+
+	// Wait for worker to stop
+	w.WaitUntilStopped()
+
+	workerErr := <-workerErrChan
+	if errors.Is(workerErr, context.Canceled) {
+		// Stopped cleanly via signal
+		return nil
+	}
+
+	return workerErr
 }
 
 func main() {
