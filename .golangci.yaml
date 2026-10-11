@@ -2,7 +2,7 @@
 version: "2"
 
 run:
-  go: "1.24"
+  go: "1.27"
   timeout: 30m
 
 formatters:
@@ -12,7 +12,8 @@ formatters:
 
   settings:
     gofumpt:
-      extra-rules: true
+      extra:
+        group-params: true
 
 linters:
   # Linters: https://golangci-lint.run/docs/linters

@@ -1,7 +1,7 @@
-# -----------------------------------------------------------------
+# ------------------------------------------------------------
 # Go gitignore
 # https://github.com/github/gitignore/blob/main/Go.gitignore
-# -----------------------------------------------------------------
+# ------------------------------------------------------------
 
 # Binaries for programs and plugins
 *.exe
@@ -21,6 +21,10 @@ go.work
 
 # Local go mod vendor ignore
 vendor/
+
+# -------------------
+# Project gitignore
+# -------------------
 
 # Ignore certain directories
 build/
