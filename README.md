@@ -20,7 +20,6 @@ Remember to also delete your `.git` folder.
 
 ## Update project with latest goilerplate changes
 
-> [!NOTE]
-> Ask your coding agent:
->
-> "Add https://github.com/ahobsonsayers/goilerplate as a git remote named `boilerplate` (skip if it already exists), fetch it, then squash merge `boilerplate/main` into this repository with `--allow-unrelated-histories` and commit the result. Keep my project's own changes (project names, renamed files) and adopt any new boilerplate updates."
+Ask your coding agent:
+
+> Add https://github.com/ahobsonsayers/goilerplate as a git remote named `boilerplate` (skip if it already exists), fetch it, then squash merge `boilerplate/main` into this repository with `--allow-unrelated-histories` and commit the result. Keep my project's own changes (project names, renamed files) and adopt any new boilerplate updates.
