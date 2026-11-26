@@ -12,6 +12,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
+	"github.com/ahobsonsayers/goilerplate/server"
 	"github.com/ahobsonsayers/goilerplate/worker"
 )
 
@@ -41,6 +42,18 @@ var rootCmd = &cli.Command{
 				},
 			},
 			Action: greet,
+		},
+		{
+			Name:  "serve",
+			Usage: "run the api server until interrupted",
+			Flags: []cli.Flag{
+				&cli.IntFlag{
+					Name:  "port",
+					Value: 8080,
+					Usage: "port to listen on",
+				},
+			},
+			Action: serve,
 		},
 		{
 			Name:  "worker",
@@ -81,6 +94,13 @@ func greet(_ context.Context, cmd *cli.Command) error {
 	fmt.Println(msg)
 
 	return nil
+}
+
+func serve(ctx context.Context, cmd *cli.Command) error {
+	ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	return server.Start(ctx, cmd.Int("port"))
 }
 
 func runWorker(ctx context.Context, cmd *cli.Command) error {
