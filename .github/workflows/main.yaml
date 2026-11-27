@@ -17,5 +17,4 @@ jobs:
     needs: [lint-test]
     secrets: inherit
     with:
-      ref: ${{ github.sha }}
       tags: develop,${{ github.sha }}

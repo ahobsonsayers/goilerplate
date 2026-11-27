@@ -4,10 +4,6 @@ on:
   # Manual Invocation
   workflow_dispatch:
     inputs:
-      ref:
-        description: Branch, tag or commit hash
-        type: string
-        default: main
       tags:
         description: Docker Image Tag(s)
         type: string
@@ -16,74 +12,39 @@ on:
   # Workflow Invocation
   workflow_call:
     inputs:
-      ref:
-        description: Branch, tag or commit hash
-        type: string
-        default: main
       tags:
         description: Docker Image Tag(s)
         type: string
         required: true
 
-env:
-  IMAGE_REPOSITORY: arranhs/goilerplate
-
 jobs:
-  build-push:
-    name: Build and Push
+  get-tags:
+    name: Get tags
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
     defaults:
       run:
         shell: bash
+    outputs:
+      tags: ${{ steps.get-tags.outputs.tags }}
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ inputs.ref }}
-
-      - name: Setup qemu
-        uses: docker/setup-qemu-action@v3
-
-      - name: Setup Docker buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to docker hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Get image tags
-        id: get-image-tags
+      - name: Get tags
+        id: get-tags
         run: |
-          IMAGE_TAGS=$(echo "$IMAGE_TAGS" | tr ',' '\n')
-
-          FULL_TAGS=""
-          while read -r IMAGE_TAG; do
-            FULL_TAGS+="$IMAGE_REPOSITORY:$IMAGE_TAG\n"
-          done <<<"$IMAGE_TAGS"
-
           {
             echo "tags<<EOF"
-            echo -e "$FULL_TAGS"
+            echo "$INPUT_TAGS" | tr ',' '\n'
             echo "EOF"
-          } >>"$GITHUB_OUTPUT"
-
-          echo -e "
-          Tags:
-          $FULL_TAGS
-          "
+          } >> "$GITHUB_OUTPUT"
         env:
-          IMAGE_TAGS: ${{ inputs.tags }}
+          INPUT_TAGS: ${{ inputs.tags }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.get-image-tags.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          push: true
+  build-push:
+    name: Build and Push
+    uses: ahobsonsayers/github-workflows/.github/workflows/docker-build-push.yaml@main
+    needs: [get-tags]
+    secrets: inherit
+    with:
+      image-name: arranhs/goilerplate
+      image-tags: ${{ needs.get-tags.outputs.tags }}

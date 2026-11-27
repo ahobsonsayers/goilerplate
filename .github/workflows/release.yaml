@@ -59,5 +59,4 @@ jobs:
     needs: [create-release]
     secrets: inherit
     with:
-      ref: ${{ github.sha }}
       tags: latest,${{ needs.create-release.outputs.tag }}
