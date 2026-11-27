@@ -12,6 +12,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
+	"github.com/ahobsonsayers/goilerplate/frontend"
 	"github.com/ahobsonsayers/goilerplate/server"
 	"github.com/ahobsonsayers/goilerplate/worker"
 )
@@ -101,7 +102,9 @@ func serve(ctx context.Context, cmd *cli.Command) error {
 	defer stop()
 
 	port := cmd.Int("port")
-	return server.Start(ctx, port)
+	frontendFS := frontend.DistFS()
+
+	return server.Start(ctx, port, frontendFS)
 }
 
 func runWorker(ctx context.Context, cmd *cli.Command) error {

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Boilerplate repo for new Go projects. Single module: `cmd/goilerplate` (cli), `worker` (example worker - delete if the project does not need one) and `server` (chi + oapi-codegen API).
+Boilerplate repo for new Go projects. Single module: `cmd/goilerplate` (cli), `worker` (example worker - delete if the project does not need one), `server` (chi + oapi-codegen API) and `frontend` (React app embedded into the binary).
 
 ## Commands
 
@@ -8,7 +8,9 @@ Boilerplate repo for new Go projects. Single module: `cmd/goilerplate` (cli), `w
 - Format: `task format` — gofumpt via `go tool`
 - Test: `task test` — `go test ./...`
 - Generate: `task generate` — runs oapi-codegen from the repo root and regenerates `server/server.gen.go` from `schema/openapi.yaml` (config: `oapi.config.yaml`). Do not edit the generated file; call `GetSpec()` rather than deprecated `GetSwagger()`.
-- Build: `task build`; Docker: `task build:docker`; verify image user: `docker inspect --format '{{.Config.User}}'` (must be 65532 — distroless nonroot, keep it non-root)
+- Build: `task build` (builds the frontend first); Docker: `task build:docker`; verify image user: `docker inspect --format '{{.Config.User}}'` (must be 65532 — distroless nonroot, keep it non-root)
+- Frontend check (format, lint, types): `task check:fe` — Vite+ `vp check`, run through bun
+- Frontend dev server: `task dev:fe` — Vite proxies `/api` to `localhost:8080`
 - Run the cli with args: `task run -- greet` (or `go run ./cmd/goilerplate ...`)
 
 ## Toolchain quirks
@@ -18,6 +20,7 @@ Boilerplate repo for new Go projects. Single module: `cmd/goilerplate` (cli), `w
 - Go version is pinned in three places — bump together when it changes: go.mod `go` directive, Dockerfile `FROM golang:X`, `.golangci.yaml` `run.go`. CI reads `go-version-file: go.mod`.
 - Running `go tool golangci-lint` may fail to link with cgo on new Xcode SDKs; `CGO_ENABLED=0 go tool golangci-lint run ./...` bypasses it. CI is unaffected.
 - Config is strict: revive and gocritic run with enable-all. Common failures: unused method receivers must be nameless (`func (*Worker) Run()`), `//nolint` with no space before it, error assertions in tests must use `require` not `assert`.
+- The frontend uses bun and Vite+ (`vite-plus` dev dependency, `bun run check`). `frontend/dist/.gitkeep` is committed because `//go:embed all:dist` requires the directory to exist; real build output is gitignored.
 
 ## Worker example
 

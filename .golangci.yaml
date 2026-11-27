@@ -91,3 +91,5 @@ linters:
     # Exclusions: https://golangci-lint.run/docs/linters/false-positives
     presets:
       - std-error-handling
+    paths:
+      - frontend
