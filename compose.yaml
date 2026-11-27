@@ -1,0 +1,10 @@
+services:
+  goilerplate:
+    container_name: goilerplate
+    image: arranhs/goilerplate:latest
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8080:8080

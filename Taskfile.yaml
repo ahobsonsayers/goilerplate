@@ -14,7 +14,7 @@ tasks:
     aliases:
       - gen
     cmds:
-      - go generate ./...
+      - go tool oapi-codegen -config oapi.config.yaml schema/openapi.yaml
 
   test:
     cmds:
@@ -43,4 +43,5 @@ tasks:
       - |
         docker run --rm \
           --name goilerplate \
-          goilerplate
+          -p 8080:8080 \
+          goilerplate serve --port 8080

@@ -1,12 +1,13 @@
 # AGENTS.md
 
-Boilerplate repo for new Go projects. Single module, two packages: `cmd/goilerplate` (cli) and `worker` (example worker - delete if the project does not need one).
+Boilerplate repo for new Go projects. Single module: `cmd/goilerplate` (cli), `worker` (example worker - delete if the project does not need one) and `server` (chi + oapi-codegen API).
 
 ## Commands
 
 - Lint (also fixes): `task lint` — runs `golangci-lint v2` via `go tool`; config in `.golangci.yaml`
 - Format: `task format` — gofumpt via `go tool`
 - Test: `task test` — `go test ./...`
+- Generate: `task generate` — runs oapi-codegen from the repo root and regenerates `server/server.gen.go` from `schema/openapi.yaml` (config: `oapi.config.yaml`). Do not edit the generated file; call `GetSpec()` rather than deprecated `GetSwagger()`.
 - Build: `task build`; Docker: `task build:docker`; verify image user: `docker inspect --format '{{.Config.User}}'` (must be 65532 — distroless nonroot, keep it non-root)
 - Run the cli with args: `task run -- greet` (or `go run ./cmd/goilerplate ...`)
 

@@ -30,6 +30,7 @@ vendor/
 build/
 bin/
 scratch/
+docs/
 
 # Ignore certain files
 *.DS_Store

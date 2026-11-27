@@ -7,7 +7,22 @@ Linting configuration can also be [found in the gist here](https://gist.github.c
 ## Commands
 
 - `greet` - a simple example cli command you can replace
+- `serve` - run the API server (see [API server](#api-server))
 - `worker` - example worker (see [Example worker](#example-worker)) - delete if your project does not need a worker
+
+## API server
+
+The `server` package ([server/serve.go](server/serve.go)) starts a chi router with request-time OpenAPI validation. Routes are generated from [schema/openapi.yaml](schema/openapi.yaml) by oapi-codegen (config in [oapi.config.yaml](oapi.config.yaml)).
+
+```bash
+task generate
+task run -- serve --port 8080
+curl localhost:8080/api/health
+```
+
+To add an endpoint, add the path to the schema, run `task generate`, then implement the method on `Server` in [server/server.go](server/server.go). Do not edit `server/server.gen.go`.
+
+If your project does not need a server, delete `server/`, `schema/` and `oapi.config.yaml`, then remove the `serve` command in [cmd/goilerplate/main.go](cmd/goilerplate/main.go), the `generate` task in [Taskfile.yaml](Taskfile.yaml) and the `server` dependencies from `go.mod`.
 
 ## Example worker
 
