@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/fs"
 	"log/slog"
 	"net/http"
 	"time"
@@ -21,8 +22,8 @@ const (
 	shutdownTimeout   = 10 * time.Second
 )
 
-func Start(ctx context.Context, port int) error {
-	router, err := newRouter()
+func Start(ctx context.Context, port int, frontendFS fs.FS) error {
+	router, err := newRouter(frontendFS)
 	if err != nil {
 		return fmt.Errorf("failed to create router: %w", err)
 	}
@@ -59,7 +60,7 @@ func Start(ctx context.Context, port int) error {
 	}
 }
 
-func newRouter() (http.Handler, error) {
+func newRouter(frontendFS fs.FS) (http.Handler, error) {
 	openapiValidationMiddleware, err := createOapiValidationMiddleware()
 	if err != nil {
 		return nil, fmt.Errorf("failed to create openapi validation middleware: %w", err)
@@ -73,6 +74,10 @@ func newRouter() (http.Handler, error) {
 	router := chi.NewRouter()
 	router.Use(createLoggerMiddleware())
 	router.Mount("/api", apiHandler)
+	if frontendFS != nil {
+		frontendHandler := http.FileServer(http.FS(frontendFS))
+		router.Handle("/*", frontendHandler)
+	}
 
 	return router, nil
 }

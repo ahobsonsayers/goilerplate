@@ -26,12 +26,31 @@ tasks:
       - task: test
 
   build:
+    deps: [build:fe]
     cmds:
       - go build -v -o ./bin/goilerplate ./cmd/goilerplate
 
   build:docker:
     cmds:
       - docker build . --tag goilerplate
+
+  build:fe:
+    dir: frontend
+    cmds:
+      - bun install --frozen-lockfile
+      - bun run build
+
+  check:fe:
+    dir: frontend
+    cmds:
+      - bun install --frozen-lockfile
+      - bun run check
+
+  dev:fe:
+    dir: frontend
+    cmds:
+      - bun install --frozen-lockfile
+      - bun run dev
 
   run:
     cmds:

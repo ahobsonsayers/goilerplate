@@ -24,6 +24,24 @@ To add an endpoint, add the path to the schema, run `task generate`, then implem
 
 If your project does not need a server, delete `server/`, `schema/` and `oapi.config.yaml`, then remove the `serve` command in [cmd/goilerplate/main.go](cmd/goilerplate/main.go), the `generate` task in [Taskfile.yaml](Taskfile.yaml) and the `server` dependencies from `go.mod`.
 
+## Frontend
+
+The `frontend` package ([frontend/embed.go](frontend/embed.go)) embeds the built React app and serves it at `/`; the API stays under `/api`. It uses React, Tailwind and shadcn components, with Vite+ (Vite, Oxlint, Oxfmt, TypeScript) as the toolchain.
+
+```bash
+task build        # builds the frontend, then the binary
+task check:fe     # format, lint and type-check
+```
+
+For development, run the API and the Vite dev server separately. Vite proxies `/api` to `localhost:8080`.
+
+```bash
+task run -- serve --port 8080
+task dev:fe       # http://localhost:5173
+```
+
+If your project does not need a frontend, delete `frontend/`, then remove the frontend FS argument from `server.Start` and the static route in [server/serve.go](server/serve.go). In [server/server_test.go](server/server_test.go), delete `TestFrontend` and the `testing/fstest` import, and call `newRouter()` without an argument. Then remove the `frontend` import in [cmd/goilerplate/main.go](cmd/goilerplate/main.go), the `build:fe`, `check:fe` and `dev:fe` tasks in [Taskfile.yaml](Taskfile.yaml), the frontend stage in [Dockerfile](Dockerfile), and the `frontend` job in [.github/workflows/lint-test.yaml](.github/workflows/lint-test.yaml).
+
 ## Example worker
 
 The `worker` package ([worker/worker.go](worker/worker.go)) contains an example of a worker that runs in a goroutine, with proper synchronisation. Run it with:
