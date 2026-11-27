@@ -100,7 +100,8 @@ func serve(ctx context.Context, cmd *cli.Command) error {
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	return server.Start(ctx, cmd.Int("port"))
+	port := cmd.Int("port")
+	return server.Start(ctx, port)
 }
 
 func runWorker(ctx context.Context, cmd *cli.Command) error {

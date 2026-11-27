@@ -13,7 +13,8 @@ func TestHealth(t *testing.T) {
 	require.NoError(t, err)
 
 	recorder := httptest.NewRecorder()
-	router.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/api/health", http.NoBody))
+	request := httptest.NewRequest(http.MethodGet, "/api/health", http.NoBody)
+	router.ServeHTTP(recorder, request)
 
 	require.Equal(t, http.StatusOK, recorder.Code)
 	require.JSONEq(t, `{"status":"ok"}`, recorder.Body.String())
@@ -24,7 +25,8 @@ func TestUnknownRoute(t *testing.T) {
 	require.NoError(t, err)
 
 	recorder := httptest.NewRecorder()
-	router.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/api/unknown", http.NoBody))
+	request := httptest.NewRequest(http.MethodGet, "/api/unknown", http.NoBody)
+	router.ServeHTTP(recorder, request)
 
 	require.Equal(t, http.StatusNotFound, recorder.Code)
 }

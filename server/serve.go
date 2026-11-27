@@ -24,11 +24,12 @@ const (
 func Start(ctx context.Context, port int) error {
 	router, err := newRouter()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create router: %w", err)
 	}
 
+	address := fmt.Sprintf(":%d", port)
 	httpServer := &http.Server{
-		Addr:              fmt.Sprintf(":%d", port),
+		Addr:              address,
 		Handler:           router,
 		ReadHeaderTimeout: readHeaderTimeout,
 	}
@@ -45,12 +46,13 @@ func Start(ctx context.Context, port int) error {
 		if errors.Is(err, http.ErrServerClosed) {
 			return nil
 		}
-		return err
+		return fmt.Errorf("server stopped: %w", err)
 	case <-ctx.Done():
 		shutdownCtx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
 		defer cancel()
 
-		if err := httpServer.Shutdown(shutdownCtx); err != nil {
+		err = httpServer.Shutdown(shutdownCtx)
+		if err != nil {
 			return fmt.Errorf("failed to shut down server: %w", err)
 		}
 		return nil
@@ -65,7 +67,8 @@ func newRouter() (http.Handler, error) {
 
 	apiRouter := chi.NewRouter()
 	apiRouter.Use(openapiValidationMiddleware)
-	apiHandler := HandlerFromMux(NewServer(), apiRouter)
+	apiServer := NewServer()
+	apiHandler := HandlerFromMux(apiServer, apiRouter)
 
 	router := chi.NewRouter()
 	router.Use(createLoggerMiddleware())
@@ -75,17 +78,17 @@ func newRouter() (http.Handler, error) {
 }
 
 func createLoggerMiddleware() func(http.Handler) http.Handler {
-	// This middleware includes the recover middleware
-	return httplog.RequestLogger(
-		httplog.NewLogger(
-			"goilerplate",
-			httplog.Options{
-				LogLevel:       slog.LevelDebug,
-				RequestHeaders: true,
-				Concise:        true,
-			},
-		),
+	logger := httplog.NewLogger(
+		"goilerplate",
+		httplog.Options{
+			LogLevel:       slog.LevelDebug,
+			RequestHeaders: true,
+			Concise:        true,
+		},
 	)
+
+	// This middleware includes the recover middleware
+	return httplog.RequestLogger(logger)
 }
 
 func createOapiValidationMiddleware() (func(http.Handler) http.Handler, error) {
