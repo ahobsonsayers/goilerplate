@@ -18,4 +18,7 @@ FROM gcr.io/distroless/static-debian13:nonroot
 
 COPY --from=builder /app/bin/goilerplate /goilerplate
 
+USER nonroot:nonroot
+EXPOSE 8080
 ENTRYPOINT ["/goilerplate"]
+CMD ["serve", "--port", "8080"]
